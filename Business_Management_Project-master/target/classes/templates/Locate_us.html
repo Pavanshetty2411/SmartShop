@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SmartShop : LOCATION</title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+	<style>
+		/*
+		   ==========================================================================
+		   1. DESIGN SYSTEM & SETUP
+		   ==========================================================================
+		*/
+		:root {
+			--font-main: 'Poppins', sans-serif;
+			
+			--color-bg: #f4f7f9;
+			--color-card-bg: #ffffff;
+			--color-text-primary: #1a202c;
+			--color-text-secondary: #5a677d;
+			--color-accent: #27ae60;
+			--color-accent-hover: #229954;
+			--color-border: #e2e8f0;
+			--shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --color-light: #ffffff; /* For navbar consistency */
+		}
+
+		/* Global Styles */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: var(--font-main);
+			background-color: var(--color-bg);
+			color: var(--color-text-primary);
+			padding-top: 80px; /* Prevents content from hiding behind the navbar */
+		}
+		
+		/*
+		   ==========================================================================
+		   2. NAVBAR STYLES (INTEGRATED)
+		   ==========================================================================
+		*/
+		.smartshop-navbar {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: 1000;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1rem 2.5rem;
+			background: rgba(255, 255, 255, 0.85); /* Light theme background for navbar */
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			border-bottom: 1px solid var(--color-border);
+		}
+
+		.smartshop-nav-logo {
+			font-size: 1.5rem;
+			font-weight: bold;
+			color: var(--color-text-primary);
+			text-decoration: none;
+		}
+
+		.smartshop-nav-menu {
+			list-style: none;
+			display: flex;
+			margin: 0;
+			padding: 0;
+			align-items: center;
+		}
+
+		.smartshop-nav-item {
+			margin: 0 20px;
+		}
+
+		.smartshop-nav-link {
+			text-decoration: none;
+			color: var(--color-text-secondary);
+			font-weight: 600;
+			transition: color 0.3s;
+		}
+
+		.smartshop-nav-link:hover {
+			color: var(--color-text-primary);
+		}
+
+		.login-btn {
+			background: #3498db; /* Standard blue accent for login */
+			color: var(--color-light) !important;
+			padding: 8px 18px;
+			border-radius: 50px;
+			transition: background-color 0.3s;
+		}
+		.login-btn:hover {
+			background-color: #2980b9;
+		}
+
+		/*
+		   ==========================================================================
+		   3. PAGE LAYOUT & HEADER
+		   ==========================================================================
+		*/
+		.location-container {
+			max-width: 1200px;
+			margin: 2rem auto;
+			padding: 0 2rem;
+			animation: fadeIn 1s ease-out;
+		}
+		
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(20px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		.location-header {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 2rem;
+			gap: 1rem;
+		}
+
+		.location-header h1 {
+			font-size: clamp(2rem, 5vw, 2.5rem);
+			font-weight: 700;
+			color: var(--color-text-primary);
+		}
+		.location-header h1 i {
+			color: var(--color-accent);
+			margin-right: 0.75rem;
+		}
+		
+		.cta-button {
+            background-color: var(--color-accent);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+        }
+
+        .cta-button:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-3px);
+        }
+
+		/*
+		   ==========================================================================
+		   4. RESPONSIVE MAP CONTAINER & LOADING STATE
+		   ==========================================================================
+		*/
+		.map-wrapper {
+			position: relative;
+			background-color: #e2e8f0;
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: var(--shadow);
+			padding-top: 56.25%; 
+		}
+
+		.map-wrapper .loader {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 50px;
+			height: 50px;
+			border: 5px solid rgba(0,0,0,0.1);
+			border-left-color: var(--color-accent);
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+			z-index: 1;
+		}
+
+		@keyframes spin {
+			to { transform: translate(-50%, -50%) rotate(360deg); }
+		}
+
+		.map-wrapper iframe {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border: 0;
+			opacity: 0;
+			transition: opacity 0.5s ease-in-out;
+		}
+		
+		.map-wrapper.is-loading iframe {
+			opacity: 0;
+		}
+		.map-wrapper.is-loaded .loader {
+			display: none;
+		}
+		.map-wrapper.is-loaded iframe {
+			opacity: 1;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div th:replace="~{Navigation::navbar}"></div>
+	
+	<main class="location-container">
+		<div class="location-header">
+			<h1><i class="fa-solid fa-map-location-dot"></i>Our Location</h1>
+			
+			<a href="https://www.google.com/maps/dir/?api=1&destination=MVJ+College+Of+Engineering,+Bengaluru" target="_blank" rel="noopener noreferrer" class="cta-button">
+				<i class="fa-solid fa-diamond-turn-right"></i>
+				Get Directions
+			</a>
+		</div>
+
+		<div class="map-wrapper" id="map-wrapper">
+			<div class="loader"></div>
+			<iframe 
+				id="location-map"
+				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.811568285124!2d77.7516348148222!3d12.98391009084803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae110b65f74e6f%3A0x2a955761efa862be!2sMVJ%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1663333333333" 
+				allowfullscreen="" 
+				loading="lazy" 
+				referrerpolicy="no-referrer-when-downgrade">
+			</iframe>
+		</div>
+	</main>
+
+	<script>
+		const mapFrame = document.getElementById('location-map');
+		const mapWrapper = document.getElementById('map-wrapper');
+
+		mapWrapper.classList.add('is-loading');
+
+		mapFrame.addEventListener('load', () => {
+			mapWrapper.classList.remove('is-loading');
+			mapWrapper.classList.add('is-loaded');
+		});
+	</script>
+</body>
+</html>

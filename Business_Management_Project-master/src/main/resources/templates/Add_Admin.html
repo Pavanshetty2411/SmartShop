@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop : Add Admin</title>
+    
+    <!-- Icons and Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /*
+       ==========================================================================
+       1. DESIGN SYSTEM & SETUP
+       ==========================================================================
+    */
+    :root {
+        --font-main: 'Poppins', sans-serif;
+        
+        --color-bg: #10141a;
+        --color-panel-bg: #1a202c;
+        --color-text-light: #edf2f7;
+        --color-text-secondary: #a0aec0;
+        --color-accent: #3498db;
+        --color-accent-hover: #2980b9;
+        --color-border: #2d3748;
+        --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Basic reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: var(--font-main);
+        background-color: var(--color-bg);
+        color: var(--color-text-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+    
+    /*
+       ==========================================================================
+       2. FORM CONTAINER CARD
+       ==========================================================================
+    */
+    .form-container {
+        width: 100%;
+        max-width: 500px;
+        background-color: var(--color-panel-bg);
+        padding: 2.5rem;
+        border-radius: 16px;
+        border: 1px solid var(--color-border);
+        box-shadow: var(--shadow);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .form-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    .form-header h1 i {
+        color: var(--color-accent);
+    }
+    
+    .form-header p {
+        color: var(--color-text-secondary);
+    }
+    
+    /*
+       ==========================================================================
+       3. MODERN FORM STYLING
+       ==========================================================================
+    */
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-text-secondary);
+    }
+    
+    .form-input {
+        width: 100%;
+        background-color: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 0.8rem 1rem 0.8rem 2.5rem; /* Padding for the icon */
+        font-family: var(--font-main);
+        font-size: 1rem;
+        color: var(--color-text-light);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .form-input::placeholder {
+        color: var(--color-text-secondary);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .form-button {
+        flex: 1;
+        padding: 0.9rem;
+        border-radius: 8px;
+        font-family: var(--font-main);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border: none;
+    }
+    
+    .primary-btn {
+        background-color: var(--color-accent);
+        color: var(--color-text-light);
+    }
+    .primary-btn:hover {
+        background-color: var(--color-accent-hover);
+    }
+    
+    .secondary-btn {
+        background-color: var(--color-dark-bg-alt);
+        color: var(--color-text-light);
+    }
+    .secondary-btn:hover {
+        background-color: #3e4c62;
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="form-container">
+        <header class="form-header">
+            <h1><i class="fa-solid fa-user-shield"></i> Add New Admin</h1>
+            <p>Create a new administrator or partner account.(Default Password : 1234)</p>
+        </header>
+
+        <form th:action="@{/addingAdmin}" method="post">
+            <!-- Admin Name Field -->
+            <div class="form-group">
+                <label for="adminName">Admin Name:</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <input type="text" id="adminName" name="adminName" class="form-input" placeholder="Enter name..." minlength="2" required>
+                </div>
+            </div>
+
+            <!-- Admin Email Field -->
+            <div class="form-group">
+                <label for="adminEmail">Admin Email:</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="adminEmail" name="adminEmail" class="form-input" placeholder="Enter email..." required>
+                </div>
+            </div>
+
+            <!-- Admin Number Field -->
+            <div class="form-group">
+                <label for="adminNumber">Admin Number:</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="adminNumber" name="adminNumber" class="form-input" placeholder="Enter 10 digit mobile number..." pattern="[0-9]{10}" required />
+                </div>
+            </div>
+
+            <!-- Hidden Password Field -->
+            <input type="hidden" name="adminPassword" value="1234" />
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <a th:href="@{admin/services}" class="form-button secondary-btn">Cancel</a>
+                <button type="submit" class="form-button primary-btn">Add Admin</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

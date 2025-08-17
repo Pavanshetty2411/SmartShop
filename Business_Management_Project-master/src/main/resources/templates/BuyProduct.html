@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop : Order</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /*
+       ==========================================================================
+       1. DESIGN SYSTEM & SETUP
+       ==========================================================================
+    */
+    :root {
+        --font-main: 'Poppins', sans-serif;
+        
+        --color-bg: #10141a;
+        --color-panel-bg: #1a202c;
+        --color-text-light: #edf2f7;
+        --color-text-secondary: #a0aec0;
+        --color-accent: #3498db;
+        --color-accent-hover: #2980b9;
+        --color-border: #2d3748;
+        --color-error: #e53e3e;
+        --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Basic reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: var(--font-main);
+        background-color: var(--color-bg);
+        color: var(--color-text-light);
+    }
+    
+    /*
+       ==========================================================================
+       2. PAGE LAYOUT & HEADER
+       ==========================================================================
+    */
+    .page-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .welcome-message {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .welcome-message span {
+        color: var(--color-accent);
+    }
+
+    .back-link {
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s ease;
+    }
+    .back-link:hover {
+        color: var(--color-text-light);
+    }
+
+    /*
+       ==========================================================================
+       3. SEARCH FORM
+       ==========================================================================
+    */
+    .search-container {
+        background-color: var(--color-panel-bg);
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+    }
+    
+    .search-container h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .search-input {
+        flex-grow: 1;
+        background-color: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        font-family: var(--font-main);
+        font-size: 1rem;
+        color: var(--color-text-light);
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: var(--color-accent);
+    }
+    
+    .search-button {
+        background-color: var(--color-accent);
+        color: var(--color-text-light);
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .search-button:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+    .error-message {
+        color: var(--color-error);
+        text-align: center;
+        margin-top: 1rem;
+        min-height: 1.2em;
+    }
+
+    /*
+       ==========================================================================
+       4. ORDER FORM & ORDERS TABLE STYLING
+       ==========================================================================
+    */
+    .content-card {
+        background-color: var(--color-panel-bg);
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+    }
+    
+    .content-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
+    .form-input { width: 100%; background-color: var(--color-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 0.8rem 1rem; font-family: var(--font-main); font-size: 1rem; color: var(--color-text-light); }
+    .form-input:read-only { background-color: #2d3748; cursor: not-allowed; }
+    .form-input:focus { outline: none; border-color: var(--color-accent); }
+    .submit-button { width: 100%; padding: 0.9rem; background-color: var(--color-accent); color: var(--color-text-light); border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; margin-top: 1rem; }
+    .submit-button:hover { background-color: var(--color-accent-hover); }
+
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem; white-space: nowrap; }
+    th { background-color: var(--color-dark-bg-alt); font-weight: 600; text-transform: uppercase; font-size: 0.875rem; color: var(--color-text-secondary); }
+    tr { border-bottom: 1px solid var(--color-border); }
+    tr:last-child { border-bottom: none; }
+    tbody tr:hover { background-color: var(--color-dark-bg-alt); }
+
+    /*
+       ==========================================================================
+       5. PRODUCT DISPLAY STYLES (REDESIGNED)
+       ==========================================================================
+    */
+    .products-container { margin-bottom: 2.5rem; }
+    .products-container .page-header { text-align: center; display: block; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+
+    .product-card {
+        background-color: var(--color-panel-bg);
+        border-radius: 16px;
+        border: 1px solid var(--color-border);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 1.75rem; /* Added padding to the card itself */
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    .product-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        flex-grow: 1; /* Pushes the button to the bottom */
+    }
+
+    .product-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--color-text-light);
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-accent);
+        white-space: nowrap;
+    }
+
+    .buy-button {
+        display: block;
+        width: 100%;
+        background: var(--color-accent);
+        color: var(--color-text-light);
+        text-align: center;
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-top: auto;
+        transition: background-color 0.3s ease;
+        border: none;
+        font-family: var(--font-main);
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .buy-button:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="page-container">
+        <header class="page-header">
+            <div class="welcome-message">
+                Welcome Back, <span th:text="${name}">User</span>!
+            </div>
+            <a href="/login" class="back-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </header>
+
+        <section class="search-container">
+            <h1>Search for Products</h1>
+            <form th:action="@{/product/search}" method="post" class="search-form">
+                <input type="text" name="productName" class="search-input" required placeholder="Enter Product Name...">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            <div class="error-message" th:text="${message}"></div>
+        </section>
+        
+        <section class="products-container" th:if="${products!=null and not #lists.isEmpty(products)}">
+            <header class="page-header">
+                <h1>Our Products</h1>
+                <p>Discover the finest selection from SmartShop.</p>
+            </header>
+        
+            <div class="product-grid">
+                <!-- REDESIGNED CARD STRUCTURE -->
+                <div class="product-card" th:each="s: ${products}">
+                    <div class="product-header">
+                        <h3 class="product-name" th:text="${s.pname}">Premium Blend</h3>
+                        <p class="product-price" th:text="'₹ ' + ${s.pprice}">₹ 499</p>
+                        
+                    </div>
+                    <p class="product-description" th:text="${s.pdescription}">
+                    A brief, engaging summary of the product's key features and benefits, designed to capture customer interest quickly.
+                </p>
+                    <form th:action="@{/product/search}" method="post">
+                        <input type="hidden" name="productName" th:value="${s.pname}" />
+                        <button type="submit" class="buy-button">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        
+        <section th:if="${product!=null}" class="content-card">
+            <h2>Place Your Order</h2>
+            <form th:action="@{/product/order}" th:object="${product}" method="post">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="oName" class="form-input" th:value="${product.pname}" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Price per Unit (₹)</label>
+                    <input type="text" name="oPrice" class="form-input" th:value="${product.pprice}" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="oQuantity" class="form-input" placeholder="e.g., 1" min="1" required />
+                </div>
+                <div class="form-group">
+                    <label for="address">Delivery Address (Only For Home Delivery)</label>
+                    <input type="text" id="address" name="address" class="form-input" placeholder="Enter your full address" />
+                </div>
+                <div class="form-group">
+                    <label for="paymode">Payment Mode</label>
+                    <input type="text" id="paymode" name="paymode" class="form-input" placeholder="e.g., UPI, Cash, Card" required />
+                </div>
+                <button type="submit" class="submit-button">Order Now</button>
+            </form>
+        </section>
+
+        <section th:if="${orders!=null and not #lists.isEmpty(orders)}" class="content-card">
+            <h2>Your Order History</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th> <th>Price</th> <th>Quantity</th> <th>Total</th> <th>Date</th> <th>Address</th> <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order :${orders}">
+                            <td th:text="${order.oName}"></td>
+                            <td th:text="'₹ ' + ${order.oPrice}"></td>
+                            <td th:text="${order.oQuantity}"></td>
+                            <td th:text="'₹ ' + ${order.totalAmmout}"></td>
+                            <td th:text="${order.orderDate}"></td>
+                            <td th:text="${order.address}"></td>
+                            <td th:text="${order.paymode}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>
