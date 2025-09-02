@@ -5,7 +5,7 @@ A modern, responsive **smart shopping web application** built with Java, HTML, a
 ---
 
 ## 🚀 Live Demo
-👉 [Click here to view the deployed SmartShop application](https://pavans-smartshop-app.onrender.com/home)
+👉 [Click here to view the deployed SmartShop application](https://pavans-smartshop-app-0s6q.onrender.com/home)
 
 ---
 
